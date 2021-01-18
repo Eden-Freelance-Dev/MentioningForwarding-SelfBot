@@ -16,18 +16,24 @@ watcher.on('ready', async() => {
 
         collector.on('collect', async m => {
             const target = forwarder.channels.get(element.forwarding);
-            console.log(m);
             if(m.content != ''){
                 await target.send(m.content);
             }
             if(m.embeds.length > 0){
                 for(let embed of m.embeds){
-                    await target.send(embed.setFooter('', ''));
+                    embed.footer = null;
+                    await target.send({
+                        embed: embed
+                    });
                 }
             }  
             if(m.attachments.size > 0){
                 for(let attachment of m.attachments){
-                    await target.send(attachment);
+                    await target.send({
+                        files: [{
+                            attachment: attachment[1].proxyURL
+                        }]
+                    });
                 }
             }
         })

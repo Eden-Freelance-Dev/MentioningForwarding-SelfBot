@@ -11,11 +11,11 @@ forwarder.login(FORWARDING_TOKEN);
 watcher.on('ready', async() => {
     console.log(`${watcher.user.username} is ready!`);
     WATCHING_CHANNELS.forEach(element => {
-        const channel = watcher.channels.cache.get(element.watching);
+        const channel = watcher.channels.get(element.watching);
         const collector = channel.createMessageCollector(() => true, {});
 
         collector.on('collect', async m => {
-            const target = forwarder.channels.cache.get(element.forwarding);
+            const target = forwarder.channels.get(element.forwarding);
             console.log(m);
             if(m.content != ''){
                 await target.send(m.content);

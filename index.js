@@ -12,7 +12,8 @@ forwarder.login(FORWARDING_TOKEN);
 const watchingChannels = fs.readFileSync('channels.txt', 'utf-8').trim().split('\n').map(str => {
     return {
         watching: str.trim().split(' ')[0],
-        forwarding: str.trim().split(' ')[1]
+        forwarding: str.trim().split(' ')[1],
+        postfix: str.trim().split(' ')[2] ? str.trim().split(' ')[2] : ''
     }
 });
 
@@ -27,22 +28,22 @@ watcher.on('ready', async() => {
         collector.on('collect', async m => {
             const target = forwarder.channels.get(channelPair.forwarding);
             if(m.content != ''){
-                await target.send(`**${m.author.username}** at *${new Date().toLocaleTimeString('en-US', {
+                await target.send(`**${m.author.username} at ${new Date().toLocaleString('en-US', {
                     timeZone: 'America/Jamaica'
-                })}* ${m.content}`);
+                })}:** ${m.content}${channelPair.postfix}`);
             }
             if(m.embeds.length > 0){
                 for(let embed of m.embeds){
-                    await target.send(`**${m.author.username}** at *${new Date().toLocaleTimeString('en-US', {
+                    await target.send(`**${m.author.username} at ${new Date().toLocaleString('en-US', {
                         timeZone: 'America/Jamaica'
-                    })}*`, embed);
+                    })}:**${channelPair.postfix}`, embed);
                 }
             }  
             if(m.attachments.size > 0){
                 for(let attachment of m.attachments){
-                    await target.send(`**${m.author.username}** at *${new Date().toLocaleTimeString('en-US', {
+                    await target.send(`**${m.author.username} at ${new Date().toLocaleString('en-US', {
                         timeZone: 'America/Jamaica'
-                    })}*`, {
+                    })}**${channelPair.postfix}`, {
                         files: [{
                             attachment: attachment[1].proxyURL
                         }]

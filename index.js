@@ -36,7 +36,10 @@ watcher.on('ready', async() => {
                 for(let embed of m.embeds){
                     await target.send(`**${m.author.username} at ${new Date().toLocaleString('en-US', {
                         timeZone: 'America/Jamaica'
-                    })}:**${channelPair.postfix}`, embed);
+                    })}:**${channelPair.postfix}`);
+                    await target.send({
+                        embed: embed
+                    })
                 }
             }  
             if(m.attachments.size > 0){

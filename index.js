@@ -9,7 +9,7 @@ const forwarder = new Client();
 watcher.login(WATCHING_TOKEN);
 forwarder.login(FORWARDING_TOKEN);
 
-const watchingChannels = fs.readFileSync('channels.txt', 'utf-8').split('\n').map(str => {
+const watchingChannels = fs.readFileSync('channels.txt', 'utf-8').trim().split('\n').map(str => {
     return {
         watching: str.trim().split(' ')[0],
         forwarding: str.trim().split(' ')[1]

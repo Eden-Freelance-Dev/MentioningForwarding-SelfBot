@@ -27,16 +27,22 @@ watcher.on('ready', async() => {
         collector.on('collect', async m => {
             const target = forwarder.channels.get(channelPair.forwarding);
             if(m.content != ''){
-                await target.send(`**${m.author.username}:** ${m.content}`);
+                await target.send(`**${m.author.username}** at *${new Date().toLocaleTimeString('en-US', {
+                    timeZoneName: 'GMT-5'
+                })}* ${m.content}`);
             }
             if(m.embeds.length > 0){
                 for(let embed of m.embeds){
-                    await target.send(`**${m.author.username}:**`, embed);
+                    await target.send(`**${m.author.username}** at *${new Date().toLocaleTimeString('en-US', {
+                        timeZoneName: 'GMT-5'
+                    })}*`, embed);
                 }
             }  
             if(m.attachments.size > 0){
                 for(let attachment of m.attachments){
-                    await target.send(`**${m.author.username}:**`, {
+                    await target.send(`**${m.author.username}** at *${new Date().toLocaleTimeString('en-US', {
+                        timeZoneName: 'GMT-5'
+                    })}*`, {
                         files: [{
                             attachment: attachment[1].proxyURL
                         }]

@@ -28,20 +28,20 @@ watcher.on('ready', async() => {
             const target = forwarder.channels.get(channelPair.forwarding);
             if(m.content != ''){
                 await target.send(`**${m.author.username}** at *${new Date().toLocaleTimeString('en-US', {
-                    timeZoneName: 'GMT-5'
+                    timeZone: 'America/Jamaica'
                 })}* ${m.content}`);
             }
             if(m.embeds.length > 0){
                 for(let embed of m.embeds){
                     await target.send(`**${m.author.username}** at *${new Date().toLocaleTimeString('en-US', {
-                        timeZoneName: 'GMT-5'
+                        timeZone: 'America/Jamaica'
                     })}*`, embed);
                 }
             }  
             if(m.attachments.size > 0){
                 for(let attachment of m.attachments){
                     await target.send(`**${m.author.username}** at *${new Date().toLocaleTimeString('en-US', {
-                        timeZoneName: 'GMT-5'
+                        timeZone: 'America/Jamaica'
                     })}*`, {
                         files: [{
                             attachment: attachment[1].proxyURL

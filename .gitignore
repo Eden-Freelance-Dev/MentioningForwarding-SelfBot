@@ -106,4 +106,4 @@ dist
 config.json
 channels.txt
 .vscode
-.zip
+*.zip

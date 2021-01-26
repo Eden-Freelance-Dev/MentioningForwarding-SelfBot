@@ -10,14 +10,5 @@
   "license": "ISC",
   "dependencies": {
     "discord.js": "^11.6.4"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Fiverr-Jobs/Forwarding-SelfBot2.git"
-  },
-  "bugs": {
-    "url": "https://github.com/Fiverr-Jobs/Forwarding-SelfBot2/issues"
-  },
-  "homepage": "https://github.com/Fiverr-Jobs/Forwarding-SelfBot2#readme",
-  "description": ""
+  }
 }

@@ -26,33 +26,35 @@ watcher.on('ready', async() => {
         const collector = channel.createMessageCollector(() => true, {});
 
         collector.on('collect', async m => {
-            const target = forwarder.channels.get(channelPair.forwarding);
-            if(m.content != ''){
-                await target.send(`**${m.author.username} at ${new Date().toLocaleString('en-US', {
-                    timeZone: 'America/Jamaica'
-                })}:** ${m.content}${channelPair.postfix}`);
-            }
-            if(m.embeds.length > 0){
-                for(let embed of m.embeds){
+            try{
+                const target = forwarder.channels.get(channelPair.forwarding);
+                if(m.content != ''){
                     await target.send(`**${m.author.username} at ${new Date().toLocaleString('en-US', {
                         timeZone: 'America/Jamaica'
-                    })}:**${channelPair.postfix}`);
-                    await target.send({
-                        embed: embed
-                    })
+                    })}:** ${m.content}${channelPair.postfix}`);
                 }
-            }  
-            if(m.attachments.size > 0){
-                for(let attachment of m.attachments){
-                    await target.send(`**${m.author.username} at ${new Date().toLocaleString('en-US', {
-                        timeZone: 'America/Jamaica'
-                    })}**${channelPair.postfix}`, {
-                        files: [{
-                            attachment: attachment[1].proxyURL
-                        }]
-                    });
+                if(m.embeds.length > 0){
+                    for(let embed of m.embeds){
+                        await target.send(`**${m.author.username} at ${new Date().toLocaleString('en-US', {
+                            timeZone: 'America/Jamaica'
+                        })}:**${channelPair.postfix}`);
+                        await target.send({
+                            embed: embed
+                        })
+                    }
+                }  
+                if(m.attachments.size > 0){
+                    for(let attachment of m.attachments){
+                        await target.send(`**${m.author.username} at ${new Date().toLocaleString('en-US', {
+                            timeZone: 'America/Jamaica'
+                        })}**${channelPair.postfix}`, {
+                            files: [{
+                                attachment: attachment[1].proxyURL
+                            }]
+                        });
+                    }
                 }
-            }
+            }catch{}
         })
     })
 });

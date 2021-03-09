@@ -29,25 +29,18 @@ watcher.on('ready', async() => {
             try{
                 const target = forwarder.channels.get(channelPair.forwarding);
                 if(m.content != ''){
-                    await target.send(`**${m.author.username} at ${new Date().toLocaleString('en-US', {
-                        timeZone: 'America/Jamaica'
-                    })}:** ${m.content}${channelPair.postfix}`);
+                    await target.send(m.content.replace(/<@&([0-9]{18}?)>/g, channelPair.postfix));
                 }
                 if(m.embeds.length > 0){
                     for(let embed of m.embeds){
-                        await target.send(`**${m.author.username} at ${new Date().toLocaleString('en-US', {
-                            timeZone: 'America/Jamaica'
-                        })}:**${channelPair.postfix}`);
                         await target.send({
                             embed: embed
                         })
                     }
-                }  
+                }
                 if(m.attachments.size > 0){
                     for(let attachment of m.attachments){
-                        await target.send(`**${m.author.username} at ${new Date().toLocaleString('en-US', {
-                            timeZone: 'America/Jamaica'
-                        })}**${channelPair.postfix}`, {
+                        await target.send('', {
                             files: [{
                                 attachment: attachment[1].proxyURL
                             }]

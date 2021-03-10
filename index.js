@@ -1,7 +1,7 @@
 const { Client } = require("discord.js");
-const fs = require('fs');
+const fs = require("fs");
 
-const { WATCHING_TOKEN, FORWARDING_TOKEN } = require('./config.json');
+const { WATCHING_TOKEN, FORWARDING_TOKEN } = require("./config.json");
 
 const watcher = new Client();
 const forwarder = new Client();
@@ -9,49 +9,65 @@ const forwarder = new Client();
 watcher.login(WATCHING_TOKEN);
 forwarder.login(FORWARDING_TOKEN);
 
-const watchingChannels = fs.readFileSync('channels.txt', 'utf-8').trim().split('\n').map(str => {
-    return {
-        watching: str.trim().split(' ')[0],
-        forwarding: str.trim().split(' ')[1],
-        postfix: str.trim().split(' ')[2] ? str.trim().split(' ')[2] : ''
-    }
-});
+const watchingChannels = fs
+    .readFileSync("channels.txt", "utf-8")
+    .trim()
+    .split("\n")
+    .map((str) => {
+        return {
+            watching: str.trim().split(" ")[0],
+            forwarding: str.trim().split(" ")[1],
+            postfix: str.trim().split(" ")[2] ? str.trim().split(" ")[2] : "",
+        };
+    });
 
 console.log(watchingChannels);
 
-watcher.on('ready', async() => {
+watcher.on("ready", async () => {
     console.log(`${watcher.user.username} is ready!`);
-    watchingChannels.forEach(channelPair => {
+    watchingChannels.forEach((channelPair) => {
         const channel = watcher.channels.get(channelPair.watching);
         const collector = channel.createMessageCollector(() => true, {});
 
-        collector.on('collect', async m => {
-            try{
+        collector.on("collect", async (m) => {
+            try {
                 const target = forwarder.channels.get(channelPair.forwarding);
-                if(m.content != ''){
-                    await target.send(m.content.replace(/<@&([0-9]{18}?)>/g, channelPair.postfix));
+                const webhook = await target.createWebhook(
+                    m.author.username,
+                    m.author.displayAvatarURL
+                );
+                if (m.content != "") {
+                    await webhook.send(
+                        m.content.replace(
+                            /<@&([0-9]{18}?)>/g,
+                            channelPair.postfix
+                        )
+                    );
                 }
-                if(m.embeds.length > 0){
-                    for(let embed of m.embeds){
-                        await target.send({
-                            embed: embed
-                        })
-                    }
-                }
-                if(m.attachments.size > 0){
-                    for(let attachment of m.attachments){
-                        await target.send('', {
-                            files: [{
-                                attachment: attachment[1].proxyURL
-                            }]
-                        });
-                    }
-                }
-            }catch{}
-        })
-    })
+                await webhook.delete();
+                // if(m.embeds.length > 0){
+                //     for(let embed of m.embeds){
+                //         await target.send({
+                //             embed: embed
+                //         })
+                //     }
+                // }
+                // if(m.attachments.size > 0){
+                //     for(let attachment of m.attachments){
+                //         await target.send('', {
+                //             files: [{
+                //                 attachment: attachment[1].proxyURL
+                //             }]
+                //         });
+                //     }
+                // }
+            } catch (e) {
+                console.log(e);
+            }
+        });
+    });
 });
 
-forwarder.on('ready', async() => {
+forwarder.on("ready", async () => {
     console.log(`${forwarder.user.username} is ready!`);
 });

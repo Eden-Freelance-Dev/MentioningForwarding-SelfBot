@@ -1,4 +1,4 @@
-const { Client } = require("discord.js");
+const { Client, Attachment } = require("discord.js");
 const fs = require("fs");
 
 const { WATCHING_TOKEN, FORWARDING_TOKEN } = require("./config.json");
@@ -36,33 +36,18 @@ watcher.on("ready", async () => {
                     m.author.username,
                     m.author.displayAvatarURL
                 );
-                if (m.content != "") {
-                    await webhook.send(
-                        m.content.replace(
-                            /<@&([0-9]{18}?)>/g,
-                            channelPair.postfix
-                        )
-                    );
-                }
+                await webhook.send(
+                    m.content.replace(/<@&([0-9]{18}?)>/g, channelPair.postfix),
+                    {
+                        embeds: m.embeds,
+                        files: m.attachments.map((msgAtt) => 
+                            new Attachment(msgAtt.proxyURL)
+                        ),
+                    }
+                );
                 await webhook.delete();
-                // if(m.embeds.length > 0){
-                //     for(let embed of m.embeds){
-                //         await target.send({
-                //             embed: embed
-                //         })
-                //     }
-                // }
-                // if(m.attachments.size > 0){
-                //     for(let attachment of m.attachments){
-                //         await target.send('', {
-                //             files: [{
-                //                 attachment: attachment[1].proxyURL
-                //             }]
-                //         });
-                //     }
-                // }
             } catch (e) {
-                console.log(e);
+                //console.log(e);
             }
         });
     });

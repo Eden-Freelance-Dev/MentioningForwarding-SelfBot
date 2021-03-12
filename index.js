@@ -37,11 +37,14 @@ watcher.on("ready", async () => {
                     m.author.displayAvatarURL
                 );
                 await webhook.send(
-                    m.content.replace(/<@&([0-9]{18}?)>/g, channelPair.postfix),
+                    m.content.replace(
+                        /(<@&([0-9]{18}?)>)|(@everyone)|(@here)/g,
+                        channelPair.postfix
+                    ),
                     {
                         embeds: m.embeds,
-                        files: m.attachments.map((msgAtt) => 
-                            new Attachment(msgAtt.proxyURL)
+                        files: m.attachments.map(
+                            (msgAtt) => new Attachment(msgAtt.proxyURL)
                         ),
                     }
                 );
